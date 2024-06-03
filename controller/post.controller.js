@@ -2,6 +2,8 @@ const Joi = require("joi");
 const postService = require("../services/post.service");
 
 const get = (req, res) => {
+  postService.attachCommentsToPosts();
+
   res.send(JSON.stringify(postService.getAllPosts()));
 };
 

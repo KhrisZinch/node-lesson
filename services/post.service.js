@@ -1,13 +1,19 @@
 const axios = require("axios");
 
 let allPosts = [];
+let postsComments = [];
 
 const init = () => {
   loadAllPosts();
+  laodPostsComments();
 };
 
 const getAllPosts = () => {
   return allPosts;
+};
+
+const getPostsComments = () => {
+  return postsComments;
 };
 
 const getById = (id) => {
@@ -20,6 +26,26 @@ const loadAllPosts = () => {
       allPosts = response.data;
     }
   );
+};
+
+const laodPostsComments = () => {
+  return axios("https://jsonplaceholder.typicode.com/comments").then(
+    (response) => {
+      postsComments = response.data;
+    }
+  );
+};
+
+const attachCommentsToPosts = () => {
+  postsComments.forEach((comment) => {
+    const foundPost = getById(comment.postId);
+
+    if (!foundPost.comments) {
+      foundPost.comments = [];
+    }
+
+    foundPost.comments.push(comment);
+  });
 };
 
 const create = ({ userId, title, body }) => {
@@ -50,6 +76,8 @@ const remove = (id) => {
 module.exports = {
   init,
   getAllPosts,
+  getPostsComments,
+  attachCommentsToPosts,
   getById,
   create,
   update,
