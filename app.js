@@ -1,5 +1,6 @@
 const express = require("express");
 const { postRouter } = require("./routes/posts.route");
+const { fileRouter } = require("./routes/file.route");
 const postService = require("./services/post.service");
 
 function createServer() {
@@ -9,6 +10,7 @@ function createServer() {
 
   app.use(express.static("public"));
   app.use("/posts", express.json(), postRouter);
+  app.use("/file", fileRouter);
 
   return app;
 }
