@@ -22,8 +22,8 @@ const getById = (req, res) => {
   res.send(post);
 };
 
-const create = (req, res) => {
-  const { body } = req.body;
+const create = async (req, res) => {
+  const { body } = req;
   const { error } = validatePost(body);
 
   if (error) {
@@ -33,7 +33,7 @@ const create = (req, res) => {
     return;
   }
 
-  const post = postService.create(body);
+  const post = await postService.create(body);
 
   res.statusCode = 201;
   res.send(post);

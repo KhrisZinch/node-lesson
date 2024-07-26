@@ -1,7 +1,7 @@
 const fileService = require("#services/file.service.js");
 
-const getFile = (req, res) => {
-  const data = fileService.getFile();
+const getFile = async (req, res) => {
+  const data = await fileService.getFile();
   console.log(data, "data");
 
   if (!data) {
