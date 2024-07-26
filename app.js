@@ -1,11 +1,8 @@
 const express = require("express");
-const { postRouter } = require("./routes/posts.route");
-const { fileRouter } = require("./routes/file.route");
-const postService = require("./services/post.service");
+const { postRouter } = require("#routes/posts.route.js");
+const { fileRouter } = require("#routes/file.route.js");
 
 function createServer() {
-  postService.init();
-
   const app = express();
 
   app.use(express.static("public"));

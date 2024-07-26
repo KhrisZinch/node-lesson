@@ -1,11 +1,12 @@
-const axios = require("axios");
+const { loadAllPosts } = require("#api/PostsApi.js");
+const { laodPostsComments } = require("#api/CommentsApi.js");
 
 let allPosts = [];
 let postsComments = [];
 
-const init = () => {
-  loadAllPosts();
-  laodPostsComments();
+const init = async () => {
+  allPosts = await loadAllPosts();
+  postsComments = await laodPostsComments();
 };
 
 const getAllPosts = () => {
@@ -20,22 +21,6 @@ const getById = (id) => {
   return allPosts.find((item) => item.id === parseInt(id));
 };
 
-const loadAllPosts = () => {
-  return axios("https://jsonplaceholder.typicode.com/posts").then(
-    (response) => {
-      allPosts = response.data;
-    }
-  );
-};
-
-const laodPostsComments = () => {
-  return axios("https://jsonplaceholder.typicode.com/comments").then(
-    (response) => {
-      postsComments = response.data;
-    }
-  );
-};
-
 const attachCommentsToPosts = () => {
   postsComments.forEach((comment) => {
     const foundPost = getById(comment.postId);
@@ -48,12 +33,12 @@ const attachCommentsToPosts = () => {
   });
 };
 
-const create = ({ userId, title, body }) => {
+const create = async ({ userId, title, body }) => {
   const newPost = {
     id: allPosts.length + 1,
-    userId: userId,
-    title: title,
-    body: body,
+    userId,
+    title,
+    body,
   };
 
   allPosts.push(newPost);
@@ -69,7 +54,7 @@ const update = ({ id, author }) => {
   return postToUpdate;
 };
 
-const remove = (id) => {
+const remove = async (id) => {
   allPosts = allPosts.filter((item) => item.id !== id);
 };
 

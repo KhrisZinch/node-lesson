@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const postService = require("../services/post.service");
+const postService = require("#services/post.service.js");
 
 const get = (req, res) => {
   postService.attachCommentsToPosts();
@@ -23,7 +23,8 @@ const getById = (req, res) => {
 };
 
 const create = (req, res) => {
-  const { error } = validatePost(req.body);
+  const { body } = req.body;
+  const { error } = validatePost(body);
 
   if (error) {
     res.sendStatus = 400;
@@ -32,7 +33,7 @@ const create = (req, res) => {
     return;
   }
 
-  const post = postService.create(req.body);
+  const post = postService.create(body);
 
   res.statusCode = 201;
   res.send(post);

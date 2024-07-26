@@ -1,5 +1,5 @@
 const express = require("express");
-const fileController = require("../controller/file.controller");
+const fileController = require("#controller/file.controller.js");
 const router = express.Router();
 
 router.get("/", fileController.getFile);

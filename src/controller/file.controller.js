@@ -1,11 +1,11 @@
-const fileService = require("../services/file.service");
+const fileService = require("#services/file.service.js");
 
 const getFile = (req, res) => {
   const data = fileService.getFile();
   console.log(data, "data");
 
   if (!data) {
-    res.statusCode = 500;
+    res.statusCode = 204;
     res.end("Server error");
     return;
   }
