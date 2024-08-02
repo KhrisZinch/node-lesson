@@ -1,29 +1,27 @@
 const fs = require("fs");
+const path = require("node:path");
 
-const createFile = () => {
-  console.log("work heere");
-  fs.appendFile(
-    "./public/example.txt",
-    "Hello world from new file!",
-    (err, data) => {
-      if (err) throw err;
-      console.log("Data is appended");
-    }
-  );
+const filePath = path.resolve("public", "example.txt");
+
+const createFile = (textContent) => {
+  fs.appendFile(filePath, textContent, (err, data) => {
+    if (err) throw err;
+  });
 };
 
-const updateFile = () => {
-  fs.writeFile("./public/example.txt", "This is added text", (err) => {
+const updateFile = (textContent) => {
+  fs.writeFile(filePath, textContent, (err) => {
     if (err) throw err;
-    console.log("Data is Updatd");
   });
 };
 
 const getFile = () => {
-  fs.readFile("./public/example.txt", "utf-8", (err, data) => {
-    if (err) throw err;
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, "utf-8", (err, data) => {
+      if (err) reject(err);
 
-    return data;
+      resolve(data);
+    });
   });
 };
 

@@ -7,7 +7,7 @@ function createServer() {
 
   app.use(express.static("public"));
   app.use("/posts", express.json(), postRouter);
-  app.use("/file", fileRouter);
+  app.use("/file", express.json(), fileRouter);
 
   return app;
 }
