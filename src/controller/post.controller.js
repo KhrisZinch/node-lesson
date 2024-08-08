@@ -1,15 +1,13 @@
 const Joi = require("joi");
 const postService = require("#services/post.service.js");
 
-const get = (req, res) => {
-  postService.attachCommentsToPosts();
-
-  res.send(JSON.stringify(postService.getAllPosts()));
+const get = async (req, res) => {
+  res.send(JSON.stringify(await postService.getAllPosts()));
 };
 
-const getById = (req, res) => {
+const getById = async (req, res) => {
   const { id } = req.params;
-  const post = postService.getById(id);
+  const post = await postService.getById(id);
 
   if (isNaN(id)) {
     return res.sendStatus(400);
@@ -49,10 +47,10 @@ const validatePost = (post) => {
   return schema.validate(post);
 };
 
-const update = (req, res) => {
+const update = async (req, res) => {
   const { id } = req.params;
   const { author } = req.body;
-  const post = postService.update({
+  const post = await postService.update({
     id,
     author,
   });
@@ -60,14 +58,14 @@ const update = (req, res) => {
   res.send(post);
 };
 
-const remove = (req, res) => {
+const remove = async (req, res) => {
   const id = +req.params.id;
 
   if (!postService.getById(id)) {
     return res.sendStatus(404);
   }
 
-  postService.remove(id);
+  await postService.remove(id);
 
   res.sendStatus(204);
 };

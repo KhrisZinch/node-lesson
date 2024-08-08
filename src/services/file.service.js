@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("node:path");
-
 const filePath = path.resolve("public", "example.txt");
 
 const createFile = (textContent) => {

@@ -1,39 +1,22 @@
 const { loadAllPosts } = require("#api/PostsApi.js");
 const { laodPostsComments } = require("#api/CommentsApi.js");
+const { attachCommentsToPosts } = require("#utils/index.js");
 
-let allPosts = [];
-let postsComments = [];
+const getAllPosts = async () => {
+  const allPosts = await loadAllPosts();
+  const postsComments = await laodPostsComments();
 
-const init = async () => {
-  allPosts = await loadAllPosts();
-  postsComments = await laodPostsComments();
+  return attachCommentsToPosts(postsComments, allPosts);
 };
 
-const getAllPosts = () => {
-  return allPosts;
-};
+const getById = async (id) => {
+  const allPosts = await getAllPosts();
 
-const getPostsComments = () => {
-  return postsComments;
-};
-
-const getById = (id) => {
   return allPosts.find((item) => item.id === parseInt(id));
 };
 
-const attachCommentsToPosts = () => {
-  postsComments.forEach((comment) => {
-    const foundPost = getById(comment.postId);
-
-    if (!foundPost.comments) {
-      foundPost.comments = [];
-    }
-
-    foundPost.comments.push(comment);
-  });
-};
-
 const create = async ({ userId, title, body }) => {
+  const allPosts = await getAllPosts();
   const newPost = {
     id: allPosts.length + 1,
     userId,
@@ -46,8 +29,8 @@ const create = async ({ userId, title, body }) => {
   return newPost;
 };
 
-const update = ({ id, author }) => {
-  const postToUpdate = getById(id);
+const update = async ({ id, author }) => {
+  const postToUpdate = await getById(id);
 
   Object.assign(postToUpdate, { author });
 
@@ -55,14 +38,13 @@ const update = ({ id, author }) => {
 };
 
 const remove = async (id) => {
+  let allPosts = await getAllPosts();
+
   allPosts = allPosts.filter((item) => item.id !== id);
 };
 
 module.exports = {
-  init,
   getAllPosts,
-  getPostsComments,
-  attachCommentsToPosts,
   getById,
   create,
   update,
