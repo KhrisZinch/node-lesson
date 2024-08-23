@@ -6,6 +6,7 @@ router.get("/", postController.get);
 router.get("/:id", postController.getById);
 router.post("/", postController.create);
 router.put("/:id", postController.update);
+router.patch("/:id/comments", postController.updateComments);
 router.delete("/:id", postController.remove);
 
 module.exports = {

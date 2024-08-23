@@ -1,46 +1,59 @@
 const { loadAllPosts } = require("#api/PostsApi.js");
 const { laodPostsComments } = require("#api/CommentsApi.js");
 const { attachCommentsToPosts } = require("#utils/index.js");
+const { Post } = require("#models/post.js");
 
 const getAllPosts = async () => {
-  const allPosts = await loadAllPosts();
-  const postsComments = await laodPostsComments();
+  // const allPosts = await loadAllPosts();
+  // const postsComments = await laodPostsComments();
 
-  return attachCommentsToPosts(postsComments, allPosts);
+  // return attachCommentsToPosts(postsComments, allPosts);
+
+  return await Post.find().sort("title");
 };
 
 const getById = async (id) => {
-  const allPosts = await getAllPosts();
+  const post = await Post.findById(id);
 
-  return allPosts.find((item) => item.id === parseInt(id));
+  return post;
 };
 
-const create = async ({ userId, title, body }) => {
-  const allPosts = await getAllPosts();
-  const newPost = {
-    id: allPosts.length + 1,
+const create = async ({ userId, title, body, comments }) => {
+  let newPost = new Post({
     userId,
     title,
     body,
-  };
+    comments,
+  });
 
-  allPosts.push(newPost);
+  newPost = await newPost.save();
 
   return newPost;
 };
 
-const update = async ({ id, author }) => {
-  const postToUpdate = await getById(id);
-
-  Object.assign(postToUpdate, { author });
+const update = async ({ id, body }) => {
+  const postToUpdate = await Post.findByIdAndUpdate(
+    id,
+    { body },
+    { new: true }
+  );
 
   return postToUpdate;
 };
 
 const remove = async (id) => {
-  let allPosts = await getAllPosts();
+  const post = await Post.findByIdAndDelete(id);
 
-  allPosts = allPosts.filter((item) => item.id !== id);
+  return post;
+};
+
+const addComment = async (id, comment) => {
+  const post = await getById(id);
+
+  post.comments.push(comment);
+  post.save();
+
+  return post;
 };
 
 module.exports = {
@@ -49,4 +62,5 @@ module.exports = {
   create,
   update,
   remove,
+  addComment,
 };
